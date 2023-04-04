@@ -1,33 +1,51 @@
 import numpy as np
-import src.Neuron as Neuron
+from ActivationFunction import *
+
 
 class Layer:
     neurons = []
-    
-    def __init__(self, num_of_neurons, next_layer):
-        
-        for i in range(num_of_neurons):
-            neuron = Neuron()
-            self.neurons.append(neuron)
-        self.next_layer = next_layer
-        self.w = np.zeros( num_of_neurons+1 )
-        self.w[0] = 1
-    
-    def getNeurons(self) -> list:
-        return self.neurons
-    
-    def calculate(input) -> np.ndarray:
+
+    def __init__(self, weight, bias, activation):
+        self.b = bias
+        self.w = weight
+        if activation == "linear":
+            self.activation_function = LinearActivation()
+        elif activation == "relu":
+            self.activation_function = ReluActivation()
+        elif activation == "sigmoid":
+            self.activation_function = SigmoidActivation()
+        else:
+            self.activation_function = SoftmaxActivation()
+        self.num_of_neurons = len(weight)
+        self.num_of_input = len(weight[0])
+
+    def calculate(self, input) -> np.ndarray:
         # calculate the matrix output to the next layer
-        pass
-    
-class SoftMaxLayer(Layer):
-    def __init__(self, num_of_neurons, next_layer):
-        super().__init__(num_of_neurons, next_layer)
-    
-    def calculate(input) -> np.ndarray:
-        linear_output = super.calculate(input)
-        # calculate e^x for all x in output
-        # calculate the sum of all e^x
-        # calculate the ratio of e^x to the sum
-        return np.ndarray()
-        
+        # input matriks kolom
+        # bias = np.transpose(self.b)
+
+        wtx = np.matmul(self.w, input)
+        bias = self.b
+        bias = np.resize(bias, (len(bias), len(input[0])))
+        net = wtx + bias
+        return self.activation_function.calculate(net)
+
+
+# class SoftMaxLayer(Layer):
+#    def __init__(self, weight, bias, activation):
+#        super().__init__(weight, bias, activation)
+#
+#    def calculate(self, input) -> np.ndarray:
+#        linear_output = super.calculate(self, input)
+#        self.exp_sum = 0
+#        self.exp_output = []
+#        for row in linear_output:
+#            self.exp_sum += row[0]
+#            self.exp_output.append(row[0])
+#
+#        for i in range(self.num_of_neurons):
+#            linear_output[i] = np.insert(output, i, [self.exp_output[i]/self.exp_sum], axis=0)
+#        # calculate e^x for all x in output
+#        # calculate the sum of all e^x
+#        # calculate the ratio of e^x to the sum
+#        return output

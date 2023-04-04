@@ -1,41 +1,40 @@
 import numpy as np
-import math
 from ActivationFunction import *
 
+
 class Layer:
-    neurons = [];
+    neurons = []
 
     def __init__(self, weight, bias, activation):
         self.b = bias
         self.w = weight
         if activation == "linear":
-            self.activation_function = ActivationFunction()
+            self.activation_function = LinearActivation()
         elif activation == "relu":
-            self.activation_function = ActivationFunction()
+            self.activation_function = ReluActivation()
         elif activation == "sigmoid":
-            self.activation_function = ActivationFunction()
+            self.activation_function = SigmoidActivation()
         else:
-            self.activation_function = ActivationFunction()
+            self.activation_function = SoftmaxActivation()
         self.num_of_neurons = len(weight)
         self.num_of_input = len(weight[0])
-        
-        
-    def calculate(self,input) -> np.ndarray:
+
+    def calculate(self, input) -> np.ndarray:
         # calculate the matrix output to the next layer
         # input matriks kolom
         # bias = np.transpose(self.b)
-        
+
         wtx = np.matmul(self.w, input)
         bias = self.b
         bias = np.resize(bias, (len(bias), len(input[0])))
         net = wtx + bias
         return self.activation_function.calculate(net)
-        
 
-#class SoftMaxLayer(Layer):
+
+# class SoftMaxLayer(Layer):
 #    def __init__(self, weight, bias, activation):
 #        super().__init__(weight, bias, activation)
-#    
+#
 #    def calculate(self, input) -> np.ndarray:
 #        linear_output = super.calculate(self, input)
 #        self.exp_sum = 0
@@ -49,4 +48,4 @@ class Layer:
 #        # calculate e^x for all x in output
 #        # calculate the sum of all e^x
 #        # calculate the ratio of e^x to the sum
-#        return output    
+#        return output

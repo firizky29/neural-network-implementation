@@ -8,6 +8,7 @@ class Layer:
     def __init__(self, weight, bias, activation):
         self.b = bias
         self.w = weight
+        self.activation_name = activation
         if activation == "linear":
             self.activation_function = LinearActivation()
         elif activation == "relu":

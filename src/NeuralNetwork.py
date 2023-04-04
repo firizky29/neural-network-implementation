@@ -21,7 +21,7 @@ class NeuralNetwork:
     def draw(self):
         def get_id(i, j):
             layer_id = ""
-            for k in range(1, i+1):
+            for k in range(1, i+2):
                 if (i >= 26**k):
                     i -= 26**k
                 else:
@@ -35,6 +35,7 @@ class NeuralNetwork:
         def get_color_random():
             return "#" + ''.join([random.choice('0123456789ABCDEF') for j in range(6)])
 
+        labels = {}
         colors = []
         G = nx.Graph()
         for i in range(len(self.layers)):
@@ -53,6 +54,7 @@ class NeuralNetwork:
                 colors.append(layer_color)
                 G.add_node(get_id(i+1, 0))
                 G.nodes[get_id(i+1, 0)]["subset"] = i+1
+                labels[get_id(i+1,0)] = layer.activation_name
             for j in range(self.layers[i].num_of_neurons):
                 colors.append(layer_color)
                 # bias
@@ -62,10 +64,13 @@ class NeuralNetwork:
                     G.add_edge(get_id(i, k+1), get_id(i+1, j+1),
                                weight=layer.w[j][k])
                 G.nodes[get_id(i+1, j+1)]["subset"] = i+1
+            if(i == len(self.layers) - 1):
+                labels[get_id(i+1,1)] = layer.activation_name
 
         pos = nx.multipartite_layout(G)
         nx.draw(G, pos, with_labels=True,
-                font_weight='bold', node_color=colors)
+                font_weight='bold', node_color=colors, node_size=100, font_size=10)
+        nx.draw_networkx_labels(G, pos, labels=labels, verticalalignment='bottom', horizontalalignment="left", font_size=12)
         nx.draw_networkx_edge_labels(G, pos, edge_labels=nx.get_edge_attributes(
             G, 'weight'), label_pos=0.8, font_size=8)
         plt.show()
@@ -84,11 +89,11 @@ if __name__ == "__main__":
     nn.addLayer(Layer(
         [[0.11, 0.15, 0.69], [0.13, 0.35, 0.21]],
         [1, 2],
-        "linear"
+        "relu"
     ))
     nn.addLayer(Layer(
         [[0.15, 0.69], [0.35, 0.21]],
         [1, 2],
-        "linear"
+        "softmax"
     ))
     nn.draw()

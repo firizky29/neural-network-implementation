@@ -1,4 +1,6 @@
 import Layer
+import numpy as np
+
 
 class NeuralNetwork:
     def __init__(self):
@@ -12,7 +14,7 @@ class NeuralNetwork:
         for layer in self.layers:
             output = layer.calculate(output)
         return output
-    
+
     def draw(self):
         pass
 

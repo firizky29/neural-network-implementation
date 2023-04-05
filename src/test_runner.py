@@ -43,16 +43,26 @@ def check_sse(file_path: str):
         sse_actual = np.square(
             res - answer_output).sum(axis=0)
 
-        assert np.all(sse_actual <= sse_threshold)
+        if res.shape != answer_output.shape:
+            print(
+                f"Test case file {file_path} is failed because shape is different: {res.shape} > {answer_output.shape}")
+            print(f"Actual : {res}")
+            print(f"Expected : {answer_output}\n")
+            assert False
+
+        if not np.all(sse_actual <= sse_threshold):
+            print(
+                f"Test case file {file_path} is failed because SSE is greater than threshold: {sse_actual} > {sse_threshold}")
+            print(f"Actual : {res}")
+            print(f"Expected : {answer_output}\n")
+            assert False
+
+        print(f"Test case file {file_path} is success\n")
     except AssertionError:
-        print(
-            f"Test case file {file_path} is failed because SSE is greater than threshold: {sse_actual} > {sse_threshold}")
-        print("\nDetails:")
-        print(f"Actual : {res}")
-        print(f"Expected : {answer_output}\n---\n")
         assert False
     except Exception as err:
-        print(f"Failed when execute file {file_path}")
+        print(
+            f"Failed when execute file {file_path} because an exception:", end=" ")
         print(err)
         assert False
 

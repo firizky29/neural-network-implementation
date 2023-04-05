@@ -1,0 +1,24 @@
+name: Check unit test
+on: push
+
+jobs:
+  test:
+    name: Testing Test Case
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10.x"
+      - name: Caching Python
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.pythonLocation }}
+          key: tubes-${{ env.pythonLocation }}-${{ hashFiles('requirements.txt') }}
+      - name: Install Depedency
+        run: |
+          pip install --upgrade --upgrade-strategy eager -r requirements.txt
+      - name: Testing
+        run: |
+          pytest .

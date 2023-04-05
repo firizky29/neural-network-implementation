@@ -2,7 +2,7 @@ import os.path as path
 from NeuralNetworkFactory import *
 import os
 
-ASSISTANT_PATH = path.join(path.dirname(__file__), "../sample/assistant")
+ASSISTANT_PATH = path.join(path.dirname(__file__), "../sample/forward")
 
 
 def test_tc():

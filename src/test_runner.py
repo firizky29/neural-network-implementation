@@ -45,19 +45,19 @@ def check_sse(file_path: str):
 
         if res.shape != answer_output.shape:
             print(
-                f"Test case file {file_path} is failed because shape is different: {res.shape} > {answer_output.shape}")
+                f"Test case file {path.basename(file_path)} is failed because shape is different: {res.shape} != {answer_output.shape}")
             print(f"Actual : {res}")
             print(f"Expected : {answer_output}\n")
             assert False
 
         if not np.all(sse_actual <= sse_threshold):
             print(
-                f"Test case file {file_path} is failed because SSE is greater than threshold: {sse_actual} > {sse_threshold}")
+                f"Test case file {path.basename(file_path)} is failed because SSE is greater than threshold: {sse_actual} > {sse_threshold}")
             print(f"Actual : {res}")
             print(f"Expected : {answer_output}\n")
             assert False
 
-        print(f"Test case file {file_path} is success\n")
+        print(f"Test case file {path.basename(file_path)} is success")
     except AssertionError:
         assert False
     except Exception as err:

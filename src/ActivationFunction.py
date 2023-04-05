@@ -26,6 +26,6 @@ class SigmoidActivation(ActivationFunction):
 class SoftmaxActivation(ActivationFunction):
     def calculate(self, input: np.ndarray) -> np.ndarray:
         exp_input = np.exp(input)
-        sum_layer = np.sum(exp_input, axis=0)
+        sum_layer = np.sum(exp_input, axis=1)
 
         return exp_input/sum_layer

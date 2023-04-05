@@ -60,7 +60,7 @@ class NeuralNetwork:
                 # input
                 for k in range(self.layers[i].num_of_input):
                     G.add_edge(get_id(i, k+1), get_id(i+1, j+1),
-                               weight=layer.w[j][k])
+                               weight=layer.w[k][j])
                 G.nodes[get_id(i+1, j+1)]["subset"] = i+1
 
         pos = nx.multipartite_layout(G)
@@ -72,23 +72,3 @@ class NeuralNetwork:
 
     def fit(self, input: np.ndarray, target: np.ndarray):
         pass
-
-
-if __name__ == "__main__":
-    nn = NeuralNetwork()
-    nn.addLayer(Layer(
-        [[0.05, 0.09], [0.10, 0.12], [0.08, 0.15]],
-        [1, 2, 3],
-        "linear"
-    ))
-    nn.addLayer(Layer(
-        [[0.11, 0.15, 0.69], [0.13, 0.35, 0.21]],
-        [1, 2],
-        "linear"
-    ))
-    nn.addLayer(Layer(
-        [[0.15, 0.69], [0.35, 0.21]],
-        [1, 2],
-        "linear"
-    ))
-    nn.draw()

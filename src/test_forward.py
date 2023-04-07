@@ -40,8 +40,7 @@ def check_sse(file_path: str):
 
         res = nn.calculate(np.array(json_info["case"]["input"]))
 
-        sse_actual = np.square(
-            res - answer_output).sum(axis=0)
+        sse_actual = np.square(res - answer_output).sum()
 
         if res.shape != answer_output.shape:
             print(
@@ -57,7 +56,10 @@ def check_sse(file_path: str):
             print(f"Expected : {answer_output}\n")
             assert False
 
-        print(f"Test case file {path.basename(file_path)} is success")
+        print(
+            f"Test case file {path.basename(file_path)} is success. SSE is less or equal to the threshold: {sse_actual} <= {sse_threshold}")
+        print(f"Actual : {res}")
+        print(f"Expected : {answer_output}\n")
     except AssertionError:
         assert False
     except Exception as err:

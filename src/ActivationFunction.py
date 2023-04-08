@@ -8,14 +8,14 @@ class ActivationFunction(ABC):
         pass
 
     @abstractmethod
-    def delta(self, wtx: np.ndarray, target_differential: np.ndarray) -> np.ndarray:
+    def delta(self, net_value: np.ndarray, error_diff: np.ndarray) -> np.ndarray:
         pass
 
     def loss_function(self, expected: np.ndarray, actual: np.ndarray) -> np.ndarray:
         return 0.5 * np.square(actual - expected).sum(axis=1)
 
-    def output_delta(self, expected: np.ndarray, actual: np.ndarray) -> np.ndarray:
-        return (-1 * (actual - expected)).sum(axis=1)
+    def error_differential(self, expected: np.ndarray, actual: np.ndarray) -> np.ndarray:
+        return actual - expected
 
 
 class ActivationFunDiffentiable(ActivationFunction):
@@ -23,10 +23,10 @@ class ActivationFunDiffentiable(ActivationFunction):
     def differential(self, input: np.ndarray) -> np.ndarray:
         pass
 
-    def delta(self, wtx: np.ndarray, target_differential: np.ndarray) -> np.ndarray:
-        # TODO: Menghitung delta dari wtx, target_differential adalah dE/dNext
-        diff_data = self.differential(wtx)
-        return target_differential * diff_data
+    def delta(self, net: np.ndarray, error_diff: np.ndarray) -> np.ndarray:
+        # TODO: Menghitung delta dari net, target_differential adalah dE/dNext
+        diff_data = self.differential(net)
+        return np.multiply(error_diff, diff_data)
 
 
 class LinearActivation(ActivationFunDiffentiable):
@@ -61,11 +61,12 @@ class SoftmaxActivation(ActivationFunction):
 
         return exp_input/sum_layer
 
-    def delta(self, wtx: np.ndarray, target_class: np.ndarray) -> np.ndarray:
+    def delta(self, net: np.ndarray, error_diff: np.ndarray) -> np.ndarray:
         """Calculate delta of softmax. Assumption only in output layer"""
-        result = self.calculate(wtx)
+        result = self.calculate(net)
+        target_class = np.argmax(error_diff, axis=1)
 
-        for i in range(len(wtx)):
+        for i in range(len(net)):
             result[i][target_class[i]] -= 1
 
         return result
@@ -79,5 +80,5 @@ class SoftmaxActivation(ActivationFunction):
 
         return -1 * np.log(expected)
 
-    def output_delta(self, expected: np.ndarray, actual: np.ndarray) -> np.ndarray:
-        return np.argmax(expected, axis=1)
+    def error_differential(self, expected: np.ndarray, actual: np.ndarray) -> np.ndarray:
+        return expected

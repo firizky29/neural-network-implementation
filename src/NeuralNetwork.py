@@ -7,9 +7,12 @@ from Layer import Layer
 
 class NeuralNetwork:
     def __init__(self):
-        self.layers = []
+        self.layers: list[Layer] = []
 
     def addLayer(self, layer: Layer):
+        if len(self.layers) > 0:
+            self.layers[-1].is_output = False
+
         self.layers.append(layer)
 
     def calculate(self, input: np.ndarray) -> np.ndarray:

@@ -34,15 +34,15 @@ class Layer:
         net = wtx + bias
 
         if self.is_output:
-            if expected == None:
+            if not isinstance(expected, np.ndarray):
                 raise Exception(
-                    "expected is required to get output layer delta")
+                    "expected is required to get output layer delta and must be np.ndarray")
 
             res = self.activation_function.calculate(net)
             o_diff = self.activation_function.error_differential(
                 expected, res)
             return self.activation_function.delta(net, o_diff)
-        elif error_diff != None:
+        elif isinstance(error_diff, np.ndarray):
             return self.activation_function.delta(net, error_diff)
         else:
             raise Exception(
@@ -59,9 +59,8 @@ class Layer:
         weight_delta = np.array(np.sum(row_weigths, axis=0))
         bias_delta = delta.sum(axis=0)
 
-        transposted_dw = np.transpose(
-            weight_delta.reshape(self.w.shape[1], self.w.shape[0]))
-        return transposted_dw, bias_delta
+        weight_dw = weight_delta.reshape(self.w.shape[1], self.w.shape[0])
+        return weight_dw, bias_delta
 
     def error_diff(self, delta: np.ndarray):
         weight = np.transpose(self.w)

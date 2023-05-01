@@ -3,6 +3,8 @@ from NeuralNetwork import NeuralNetwork
 from NeuralNetworkLearning import NeuralNetworkLearning
 import numpy as np
 
+import pytest
+
 
 def assest_weight_bias(w_actual, b_actual, w_expect, b_expect):
     assert np.square(w_actual-w_expect).sum() < 10e-6
@@ -119,8 +121,6 @@ def test_relu():
         ]
     )
 
-    print(l.calculate(input))
-
     learn = NeuralNetworkLearning(nn, learning_rate=0.1)
     learn.run_epoch(input, output, batch_size=2, shuffle=False)
 
@@ -142,4 +142,41 @@ def test_relu():
             [.575, -.85]
         ]
     )
+    assest_weight_bias(l.get_w(), l.get_b(), expected_w, expected_b)
+
+
+@pytest.mark.skip(reason="kasus uji belum dibandingkan")
+def test_softmax():
+    l = Layer(
+        activation="softmax",
+        bias=np.array([.1, .2]),
+        weight=np.array([
+            [.4, .7],
+            [-.5, .8]
+        ]),
+        is_output=True
+    )
+
+    nn = NeuralNetwork()
+    nn.add_layer(l)
+
+    input = np.array([[-1., .5], [.5, -1.]])
+    output = np.array(
+        [
+            [1, 0],
+            [0, 1]
+        ]
+    )
+
+    learn = NeuralNetworkLearning(nn, learning_rate=0.1)
+    learn.run_epoch(input, output, batch_size=2, shuffle=False)
+
+    expected_b = np.array([0.1, 0.2])
+    expected_w = np.array(
+        [
+            [0.34159589, 0.75840411],
+            [-0.368683, 0.668683]
+        ]
+    )
+
     assest_weight_bias(l.get_w(), l.get_b(), expected_w, expected_b)

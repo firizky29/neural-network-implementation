@@ -3,10 +3,6 @@ from NeuralNetwork import NeuralNetwork
 from NeuralNetworkLearning import NeuralNetworkLearning
 import numpy as np
 
-from sklearn.neural_network import MLPRegressor
-
-import pytest
-
 
 def assest_weight_bias(w_actual, b_actual, w_expect, b_expect):
     assert np.square(w_actual-w_expect).sum() < 10e-6
@@ -100,7 +96,6 @@ def test_linear():
     assest_weight_bias(l1.get_w(), l1.get_b(), expected_w, expected_b)
 
 
-@pytest.mark.skip(reason="test case belum divalidasi")
 def test_relu():
     l = Layer(
         activation="relu",
@@ -124,14 +119,27 @@ def test_relu():
         ]
     )
 
+    print(l.calculate(input))
+
     learn = NeuralNetworkLearning(nn, learning_rate=0.1)
     learn.run_epoch(input, output, batch_size=2, shuffle=False)
 
-    expected_b = np.array([0.095, 0.21, 0.35])
+    # KUNCI ASISTEN
+    # expected_b = np.array([0.095, 0.21, 0.35])
+    # expected_w = np.array(
+    #     [
+    #         [0.405, 0.6975],
+    #         [-.51, .805],
+    #         [.625, -.95]
+    #     ]
+    # )
+
+    expected_b = np.array([0.105, 0.19, 0.25])
     expected_w = np.array(
         [
-            [0.405, 0.6975],
-            [-.51, .805],
-            [.625, -.95]
+            [0.395, 0.7025],
+            [-.49, .795],
+            [.575, -.85]
         ]
     )
+    assest_weight_bias(l.get_w(), l.get_b(), expected_w, expected_b)

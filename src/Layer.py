@@ -29,6 +29,17 @@ class Layer:
         return self.activation_function.calculate(net)
 
     def layer_delta(self, input: np.ndarray, *, error_diff: np.ndarray = None, expected: np.ndarray = None) -> np.ndarray:
+        """Menghitung nilai dErr/dNet
+
+        Penjelasan Parameter:
+        * Parameter `input` adalah input dari layer
+        * Parameter `error_diff` merupakan nilai dErr/dOutput
+        Nilai ini diperoleh dari fungsi `error_diff` pada layer setelahnya. Wajib diisi bila layer bukan merupakan output layer
+        * Parameter `expected` merupakan hasil sesungguhnya. Wajib diisi bila merupakan output layer.
+
+        Catatan:
+        * Output layer dinyatakan dengan properti `is_output`. Bila bernilai `true`, layer ini adalah output layer.
+        """
         wtx = np.matmul(input, self.w)
         bias = self.b
         net = wtx + bias
@@ -49,6 +60,14 @@ class Layer:
                 "target_differential is required to get hidden layer delta")
 
     def weight_diff(self, input: np.ndarray, delta: np.ndarray):
+        """Menghitung nilai dErr/dWeight berdasarkan dErr/dWeight = dErr/dNet * dNet/dWeight.
+
+        Penjelasan Parameter:
+        * Parameter `input` merupakan input dari layer
+        * Parameter `delta` merupakan perhitungan dErr/dNet layer saat ini. Dihitung menggunakan method `layer_delta()`
+
+        Output dari layer ini merupakan tuple dari perubahan weight dan bias.  
+        """
         row_weigths = []
 
         # Do face-splitting product
@@ -63,5 +82,10 @@ class Layer:
         return weight_dw, bias_delta
 
     def error_diff(self, delta: np.ndarray):
+        """Menghitung nilai dErr/dInput. 
+
+        Penjelasan Parameter:
+        * Parameter `delta` merupakan perhitungan dErr/dNet layer setelahnya. Dihitung menggunakan method `layer_delta()`
+        """
         weight = np.transpose(self.w)
         return np.matmul(delta, weight)

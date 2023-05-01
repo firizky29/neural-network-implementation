@@ -5,7 +5,7 @@ import numpy as np
 
 
 class NeuralNetworkFactory:
-    def fromJson(self, filename: str) -> NeuralNetwork:
+    def from_json(self, filename: str) -> NeuralNetwork:
         try:
             with open(filename, 'r') as f:
                 model = json.load(f)
@@ -14,16 +14,16 @@ class NeuralNetworkFactory:
         except json.JSONDecodeError:
             raise Exception("Invalid JSON format.")
         else:
-            return self.fromModel(model)
+            return self.from_model(model)
 
-    def fromModel(self, model) -> NeuralNetwork:
+    def from_model(self, model) -> NeuralNetwork:
         nn = NeuralNetwork()
         for layer in model.get('layers'):
-            nn.addLayer(
+            nn.add_layer(
                 Layer(layer['weight'], layer['bias'], layer['activation']))
         return nn
 
-    def assistantJson(self, filename: str) -> NeuralNetwork:
+    def assistant_json(self, filename: str) -> NeuralNetwork:
         try:
             with open(filename, 'r') as f:
                 model = json.load(f)
@@ -49,4 +49,4 @@ class NeuralNetworkFactory:
                     "bias": b
                 })
 
-            return self.fromModel(new_format)
+            return self.from_model(new_format)

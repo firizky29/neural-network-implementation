@@ -9,7 +9,7 @@ class NeuralNetwork:
     def __init__(self):
         self.layers: list[Layer] = []
 
-    def addLayer(self, layer: Layer):
+    def add_layer(self, layer: Layer):
         if len(self.layers) > 0:
             self.layers[-1].is_output = False
 

@@ -4,7 +4,7 @@ import os.path as path
 
 def main():
     f = NeuralNetworkFactory()
-    nn = f.assistantJson(
+    nn = f.assistant_json(
         path.join(path.dirname(__file__),
                   "../test/sample/assistant/multilayer.json")
     )

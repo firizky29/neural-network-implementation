@@ -31,7 +31,7 @@ def check_sse(file_path: str):
         with open(file_path, 'r') as f:
             json_info = json.load(f)
 
-        nn = NeuralNetworkFactory().assistantJson(file_path)
+        nn = NeuralNetworkFactory().assistant_json(file_path)
 
         expect = json_info["expect"]
 

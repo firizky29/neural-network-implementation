@@ -89,3 +89,15 @@ class Layer:
         """
         weight = np.transpose(self.w)
         return np.matmul(delta, weight)
+
+    def get_w(self):
+        return np.transpose(self.w)
+
+    def get_b(self):
+        return self.b
+
+    def set_w(self, w: np.ndarray):
+        self.w = np.transpose(w)
+
+    def set_b(self, b: np.ndarray):
+        self.b = b

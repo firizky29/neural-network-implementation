@@ -24,7 +24,7 @@ class ActivationFunDiffentiable(ActivationFunction):
         pass
 
     def delta(self, net: np.ndarray, error_diff: np.ndarray) -> np.ndarray:
-        # TODO: Menghitung delta dari net, target_differential adalah dE/dNext
+        """Menghitung delta dari net. Hasil dari funsgi ini adalah dErr/dNet"""
         diff_data = self.differential(net)
         return np.multiply(error_diff, diff_data)
 

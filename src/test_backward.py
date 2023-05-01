@@ -47,14 +47,20 @@ def test_sigmoid_backpropagation():
     weight_delta_l2, bias_delta_l2 = l2.weight_diff(res_l1, delta_l2)
 
     new_weight_l2 = wl2 - learning_rate * weight_delta_l2
+    new_b2 = b2 - learning_rate * bias_delta_l2
 
     expected_weight_l2 = np.array([
         [0.35891648, 0.408666186],
         [0.511301270, 0.561370121]
     ])
 
+    expected_new_b2 = np.array([0.5308, 0.6190])
+
     sse = np.square(expected_weight_l2-new_weight_l2).sum()
+    sse_b = np.square(expected_new_b2-new_b2).sum()
+
     assert sse < 10e-6
+    assert sse_b < 10e-6
 
     # Layer 1
     error_diff = l2.error_diff(delta_l2)
@@ -62,11 +68,17 @@ def test_sigmoid_backpropagation():
     weight_delta_l1, bias_delta_l1 = l1.weight_diff(input, delta_l1)
 
     new_weight_l1 = wl1 - learning_rate * weight_delta_l1
+    new_b1 = b1 - learning_rate * bias_delta_l1
 
     expected_weight_l1 = np.array([
         [0.149780716, 0.19956143],
         [0.24975114, 0.29950229]
     ])
 
+    expected_new_b1 = np.array([0.3456, 0.3450])
+
     sse = np.square(expected_weight_l1-new_weight_l1).sum()
+    sse_b = np.square(expected_new_b1-new_b1).sum()
+
     assert sse < 10e-6
+    assert sse_b < 10e-6

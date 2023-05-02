@@ -80,5 +80,5 @@ def test_sigmoid_backpropagation():
     sse = np.square(expected_weight_l1-new_weight_l1).sum()
     sse_b = np.square(expected_new_b1-new_b1).sum()
 
-    assert sse < 10e-6
-    assert sse_b < 10e-6
+    assert sse < 1e-6
+    assert sse_b < 1e-6

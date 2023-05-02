@@ -7,8 +7,8 @@ import pytest
 
 
 def assest_weight_bias(w_actual, b_actual, w_expect, b_expect):
-    assert np.square(w_actual-w_expect).sum() < 10e-6
-    assert np.square(b_actual-b_expect).sum() < 10e-6
+    assert np.square(w_actual-w_expect).sum() < 1e-8
+    assert np.square(b_actual-b_expect).sum() < 1e-8
 
 
 def test_sigmoid():
@@ -101,7 +101,7 @@ def test_linear():
     expected_b = np.array([0.1012, 0.3006, 0.1991])
     expected_w = np.array(
         [
-            [0.402, 0.101],
+            [0.4024, 0.1018],
             [0.201, -0.799],
             [-0.7019, 0.4987]
         ]
@@ -208,8 +208,8 @@ def test_softmax():
     expected_b = np.array([0.113, 0.187])
     expected_w = np.array(
         [
-            [0.2953, 0.7981],
-            [-0.3953, 0.7018]
+            [0.29539, 0.79810],
+            [-0.39539, 0.70189]
         ]
     )
 
@@ -218,7 +218,7 @@ def test_softmax():
 
 def test_sgd_sigmoid():
     l = Layer(
-        activation="relu",
+        activation="sigmoid",
         bias=np.array([.15, .25]),
         weight=np.array([
             [.2, .35],
@@ -250,11 +250,11 @@ def test_sgd_sigmoid():
     learn = NeuralNetworkLearning(nn, learning_rate=0.1, update_bias=True)
     err0 = learn.calculate_error(input, output)
 
-    for _ in range(20_000):
+    for _ in range(10_000):
         err = learn.calculate_error(input, output)
         learn.run_epoch(input, output, batch_size=3)
 
     err = learn.calculate_error(input, output)
 
     assert err0 > err
-    assert err < 0.3
+    assert err < 0.1

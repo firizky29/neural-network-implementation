@@ -59,6 +59,8 @@ class SoftmaxActivation(ActivationFunction):
         exp_input = np.exp(input)
         sum_layer = np.sum(exp_input, axis=1)
 
+        sum_layer = sum_layer.reshape((-1, 1))
+
         return exp_input/sum_layer
 
     def delta(self, net: np.ndarray, error_diff: np.ndarray) -> np.ndarray:

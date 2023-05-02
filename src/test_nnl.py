@@ -216,6 +216,50 @@ def test_softmax():
     assest_weight_bias(l.get_w(), l.get_b(), expected_w, expected_b)
 
 
+def test_linear():
+    l1 = Layer(
+        activation="linear",
+        bias=np.array([.1, .3, .2]),
+        weight=np.array([
+            [.4, .1],
+            [.2, -.8],
+            [-.7, .5]
+        ]),
+        is_output=True
+    )
+
+    nn = NeuralNetwork()
+    nn.add_layer(l1)
+
+    input = np.array([[3.0, 1.0], [1.0, 2.0]])
+    output = np.array(
+        [
+            [2.0, 0.3, -1.9],
+            [1.3, -0.7, 0.1]
+        ]
+    )
+
+    learn = NeuralNetworkLearning(nn, learning_rate=0.001)
+    first_err = learn.calculate_error(input, output)
+
+    learn.run_epoch(input, output, batch_size=2, shuffle=False)
+    last_err = learn.calculate_error(input, output)
+
+    # Apakah error berkurang?
+    assert last_err - first_err < 0
+
+    expected_b = np.array([0.1012, 0.3006, 0.1991])
+    expected_w = np.array(
+        [
+            [0.4024, 0.1018],
+            [0.201, -0.799],
+            [-0.7019, 0.4987]
+        ]
+    )
+
+    assest_weight_bias(l1.get_w(), l1.get_b(), expected_w, expected_b)
+
+
 def test_sgd_sigmoid():
     l = Layer(
         activation="sigmoid",
@@ -258,3 +302,49 @@ def test_sgd_sigmoid():
 
     assert err0 > err
     assert err < 0.1
+
+
+def test_linear_2():
+    l1 = Layer(
+        activation="linear",
+        bias=np.array([.1, .3, .2]),
+        weight=np.array([
+            [.4, .1],
+            [.2, -.8],
+            [-.7, .5]
+        ]),
+        is_output=True
+    )
+
+    nn = NeuralNetwork()
+    nn.add_layer(l1)
+
+    input = np.array([[3.0, 1.0], [1.0, 2.0]])
+    output = np.array(
+        [
+            [2.0, 0.3, -1.9],
+            [1.3, -0.7, 0.1]
+        ]
+    )
+
+    learn = NeuralNetworkLearning(nn, learning_rate=0.1)
+    first_err = learn.calculate_error(input, output)
+
+    for _ in range(1):
+        learn.run_epoch(input, output, batch_size=2, shuffle=False)
+
+    last_err = learn.calculate_error(input, output)
+
+    # Apakah error berkurang?
+    assert last_err - first_err < 0
+
+    expected_b = np.array([0.22, 0.36, 0.11])
+    expected_w = np.array(
+        [
+            [0.64, 0.28],
+            [0.3, -0.7],
+            [-0.89, 0.37]
+        ]
+    )
+
+    assest_weight_bias(l1.get_w(), l1.get_b(), expected_w, expected_b)

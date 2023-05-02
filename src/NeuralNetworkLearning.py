@@ -4,9 +4,10 @@ from NeuralNetwork import NeuralNetwork
 
 
 class NeuralNetworkLearning:
-    def __init__(self, neural_network: NeuralNetwork, *, learning_rate: float = 0.1) -> None:
+    def __init__(self, neural_network: NeuralNetwork, *, learning_rate: float = 0.1, update_bias: bool = True) -> None:
         self.__neural_network = neural_network
         self.__learning_rate = learning_rate
+        self.__update_bias = update_bias
 
     def fit_batch(self, input: np.ndarray, output: np.ndarray) -> None:
         """Menjalankan dan update berdasarkan data"""
@@ -38,10 +39,11 @@ class NeuralNetworkLearning:
             weight_diff, bias_diff = layer.weight_diff(layer_input, delta)
 
             new_w = layer.get_w() - self.__learning_rate * weight_diff
-            new_b = layer.get_b() - self.__learning_rate * bias_diff
-
             layer.set_w(new_w)
-            layer.set_b(new_b)
+
+            if self.__update_bias:
+                new_b = layer.get_b() - self.__learning_rate * bias_diff
+                layer.set_b(new_b)
 
             last_delta = delta
             last_layer = layer

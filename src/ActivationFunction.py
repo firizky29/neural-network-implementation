@@ -75,12 +75,12 @@ class SoftmaxActivation(ActivationFunction):
 
     def loss_function(self, expected: np.ndarray, actual: np.ndarray) -> np.ndarray:
         result = np.zeros(len(actual))
-        argmax = np.argmax(actual)
+        argmax = np.argmax(expected, axis=1)
 
         for i in range(len(actual)):
-            result[i] = -np.log(actual[argmax[i]])
+            result.flat[i] = -np.log(actual[i][argmax[i]])
 
-        return -1 * np.log(expected)
+        return result
 
     def error_differential(self, expected: np.ndarray, actual: np.ndarray) -> np.ndarray:
         return expected

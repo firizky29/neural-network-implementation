@@ -39,7 +39,13 @@ def test_sigmoid():
     output = np.array([[0.01, 0.99]])
 
     learn = NeuralNetworkLearning(nn, learning_rate=0.5)
+    first_err = learn.calculate_error(input, output)
+
     learn.run_epoch(input, output)
+    last_err = learn.calculate_error(input, output)
+
+    # Apakah error berkurang?
+    assert last_err - first_err < 0
 
     # Testing
     expected_weight_l2 = np.array([
@@ -84,7 +90,13 @@ def test_linear():
     )
 
     learn = NeuralNetworkLearning(nn, learning_rate=0.001)
+    first_err = learn.calculate_error(input, output)
+
     learn.run_epoch(input, output, batch_size=2, shuffle=False)
+    last_err = learn.calculate_error(input, output)
+
+    # Apakah error berkurang?
+    assert last_err - first_err < 0
 
     expected_b = np.array([0.1012, 0.3006, 0.1991])
     expected_w = np.array(
@@ -122,7 +134,14 @@ def test_relu():
     )
 
     learn = NeuralNetworkLearning(nn, learning_rate=0.1)
+
+    first_err = learn.calculate_error(input, output)
     learn.run_epoch(input, output, batch_size=2, shuffle=False)
+
+    last_err = learn.calculate_error(input, output)
+
+    # Apakah error berkurang?
+    assert last_err - first_err < 0
 
     # KUNCI ASISTEN
     # expected_b = np.array([0.095, 0.21, 0.35])
@@ -168,7 +187,14 @@ def test_softmax():
     )
 
     learn = NeuralNetworkLearning(nn, learning_rate=0.1)
+
+    first_err = learn.calculate_error(input, output)
     learn.run_epoch(input, output, batch_size=2, shuffle=False)
+
+    last_err = learn.calculate_error(input, output)
+
+    # Apakah error berkurang?
+    assert last_err - first_err < 0
 
     # TC ASISTEN
     # expected_b = np.array([0.1, 0.2])

@@ -250,10 +250,11 @@ def test_sgd_sigmoid():
     learn = NeuralNetworkLearning(nn, learning_rate=0.1, update_bias=True)
     err0 = learn.calculate_error(input, output)
 
-    for _ in range(10_000):
+    for _ in range(20_000):
         err = learn.calculate_error(input, output)
-        learn.run_epoch(input, output)
+        learn.run_epoch(input, output, batch_size=3)
 
     err = learn.calculate_error(input, output)
+
     assert err0 > err
     assert err < 0.3

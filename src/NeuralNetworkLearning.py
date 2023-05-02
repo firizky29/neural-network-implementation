@@ -56,7 +56,7 @@ class NeuralNetworkLearning:
 
         if shuffle:
             idx_list = np.array(range(data_size))
-            idx_list = np.random.shuffle(idx_list)
+            np.random.shuffle(idx_list)
 
             epoch_data = input[idx_list]
             epoch_target = output[idx_list]

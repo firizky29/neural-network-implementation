@@ -214,3 +214,46 @@ def test_softmax():
     )
 
     assest_weight_bias(l.get_w(), l.get_b(), expected_w, expected_b)
+
+
+def test_sgd_sigmoid():
+    l = Layer(
+        activation="relu",
+        bias=np.array([.15, .25]),
+        weight=np.array([
+            [.2, .35],
+            [.3, .35]
+        ]),
+        is_output=True
+    )
+
+    input = np.array(
+        [
+            [0.0, 0.0],
+            [0.0, 0.1],
+            [1.0, 0.0],
+            [1.0, 1.0]
+        ]
+    )
+    output = np.array(
+        [
+            [0.1, 1.0],
+            [1.0, 0.0],
+            [1.0, 1.0],
+            [0.0, 0.0]
+        ]
+    )
+
+    nn = NeuralNetwork()
+    nn.add_layer(l)
+
+    learn = NeuralNetworkLearning(nn, learning_rate=0.1, update_bias=True)
+    err0 = learn.calculate_error(input, output)
+
+    for _ in range(10_000):
+        err = learn.calculate_error(input, output)
+        learn.run_epoch(input, output)
+
+    err = learn.calculate_error(input, output)
+    assert err0 > err
+    assert err < 0.3

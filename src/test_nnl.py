@@ -348,3 +348,65 @@ def test_linear_2():
     )
 
     assest_weight_bias(l1.get_w(), l1.get_b(), expected_w, expected_b)
+
+
+@pytest.mark.skip(reason="TC masih ketabrak")
+def test_mlp():
+    l1 = Layer(
+        activation="linear",
+        is_output=False,
+        bias=np.array([0.1, 0.2]),
+        weight=np.array([
+            [0.4, 0.7],
+            [-0.5, 0.8]
+        ])
+    )
+    l2 = Layer(
+        activation="relu",
+        is_output=True,
+        bias=np.array([0.1, 0.2]),
+        weight=np.array([
+            [0.4, 0.7],
+            [-0.5, 0.8]
+        ])
+    )
+
+    nn = NeuralNetwork()
+    nn.add_layer(l1)
+    nn.add_layer(l2)
+
+    input = np.array([
+        [-1.0, 0.5],
+        [0.5, -1.0]
+    ])
+    output = np.array([
+        [0.1, 1.0],
+        [1.0, 0.1]
+    ])
+
+    learn = NeuralNetworkLearning(nn, learning_rate=0.1)
+    first_err = learn.calculate_error(input, output)
+
+    learn.run_epoch(input, output, batch_size=2)
+    last_err = learn.calculate_error(input, output)
+
+    # Apakah error berkurang?
+    assert last_err - first_err < 0
+
+    # Testing
+    expected_weight_l2 = np.array([
+        [0.35605, 0.5281],
+        [-0.504275, 0.78545]
+    ])
+    expected_new_b2 = np.array([0.121, 0.2045])
+
+    expected_weight_l1 = np.array([
+        [0.42885, 0.685575],
+        [-0.4403, 0.77015]
+    ])
+    expected_new_b1 = np.array([0.07115, 0.1403])
+
+    assest_weight_bias(l1.get_w(), l1.get_b(),
+                       expected_weight_l1, expected_new_b1)
+    assest_weight_bias(l2.get_w(), l2.get_b(),
+                       expected_weight_l2, expected_new_b2)

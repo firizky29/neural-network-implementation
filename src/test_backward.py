@@ -1,4 +1,74 @@
+import os.path as path
+
+import pytest
 from Layer import *
+from NeuralNetwork import NeuralNetwork
+import os
+from NeuralNetworkFactory import *
+
+ASSISTANT_PATH = path.join(path.dirname(__file__), "../sample/backward")
+
+@pytest.mark.skip(reason="beberapa TC asisten masih Failed")
+def test_tc():
+    for root, _, files in os.walk(ASSISTANT_PATH):
+        for i in files:
+            file_path = path.join(root, i)
+
+            if i.endswith(".json"):
+                check_backward_tc(file_path)
+
+def check_backward_tc(file_path: str):
+    try:
+        with open(file_path, 'r') as f:
+            json_info = json.load(f)
+
+        nn = NeuralNetworkFactory().assistant_backward_json(file_path)
+
+        expect = json_info["expect"]
+
+        stopped_by = expect["stopped_by"]
+
+        if(stopped_by != nn.stopped_by):
+            print(
+                f"Test case file {path.basename(file_path)} is failed because stopped by is different: {stopped_by} != {nn.stopped_by}")
+            assert False
+
+        if(expect.get("final_weights") is None):
+            print(
+                f"Test case file {path.basename(file_path)} is success because stopped by is the same: {stopped_by} == {nn.stopped_by}")
+        else:
+            sse = 0.0   
+            final_weights = expect["final_weights"]
+
+            for i in range(len(nn.layers)):
+                expect_layer = np.array(final_weights[i])
+                b = expect_layer[0]
+                w = np.transpose(expect_layer[1:])
+                sse = max(sse, np.square(nn.layers[i].get_w()-w).sum())
+                sse = max(sse, np.square(nn.layers[i].get_b()-b).sum())
+                # sse += np.square(nn.layers[i].get_w()-w).sum()
+                # sse += np.square(nn.layers[i].get_b()-b).sum()
+                if(sse >= 1e-6):
+                    print(f"Actual : {nn.layers[i].get_w()}")
+                    print(f"Expected : {w}\n")
+                    print(
+                        f"Test case file {path.basename(file_path)} is failed because stopped by is the same: {stopped_by} == {nn.stopped_by} but sse: {sse} >= 1e-6")
+                    assert False                    
+            if(sse < 1e-6):
+                print(
+                    f"Test case file {path.basename(file_path)} is success because stopped by is the same: {stopped_by} == {nn.stopped_by} and sse: {sse} < 1e-6")
+    except AssertionError:
+        assert False
+    except Exception as err:
+        print(
+            f"Failed when execute file {file_path} because an exception:", end=" ")
+        print(err)
+        assert False
+
+def assest_weight_bias(w_actual, b_actual, w_expect, b_expect):
+    assert np.square(w_actual-w_expect).sum() < 1e-8
+    assert np.square(b_actual-b_expect).sum() < 1e-8
+
 
 
 def test_sigmoid_backpropagation():

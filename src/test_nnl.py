@@ -1,6 +1,6 @@
 from Layer import Layer
 from NeuralNetwork import NeuralNetwork
-from NeuralNetwork import NeuralNetworkLearning
+from NeuralNetworkLearning import NeuralNetworkLearning
 import numpy as np
 
 import pytest

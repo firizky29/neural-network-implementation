@@ -94,8 +94,7 @@ class NeuralNetworkFactory:
                             batch_size=batch_size,
                             max_iter=max_iteration,
                             error_threshold=error_threshold
-                        ) \
-                        .set_input_target(input, target)
+                        ).fit(input, target)
         
 # nn = NeuralNetworkFactory().assistant_backward_json("sample/backward/linear.json")
 # nn.fit()

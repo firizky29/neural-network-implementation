@@ -80,10 +80,6 @@ class NeuralNetwork:
             G, 'weight'), label_pos=0.8, font_size=8)
         plt.show()
 
-    def set_input_target(self, input: np.ndarray, target: np.ndarray):
-        self.input = input
-        self.target = target
-        return self
 
     def set_learning_properties(self, learning_rate: float = 0.1, batch_size=1, max_iter=1000, error_threshold:float =0.01):
         self.learning_rate = learning_rate
@@ -92,13 +88,15 @@ class NeuralNetwork:
         self.error_threshold = error_threshold
         return self
 
-    def fit(self) -> None:
+    def fit(self, input: np.ndarray, target: np.ndarray) -> None:
         neural_network_learning = NeuralNetworkLearning(self, learning_rate=self.learning_rate)
         for i in range(self.max_iter):
-            neural_network_learning.run_epoch(self.input, self.target, batch_size=self.batch_size, shuffle=False)
-            error = neural_network_learning.calculate_error(self.input, self.target)
+            neural_network_learning.run_epoch(input, target, batch_size=self.batch_size, shuffle=False)
+            error = neural_network_learning.calculate_error(input, target)
             if(error <= self.error_threshold):
                 # print(f"i: {i}")
                 self.stopped_by = "error_threshold"
                 return
-        self.stopped_by = "max_iteration"        
+        self.stopped_by = "max_iteration"   
+
+        return self     

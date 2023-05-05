@@ -1,10 +1,9 @@
 import numpy as np
 from Layer import Layer
-from NeuralNetwork import NeuralNetwork
 
 
 class NeuralNetworkLearning:
-    def __init__(self, neural_network: NeuralNetwork, *, learning_rate: float = 0.1, update_bias: bool = True) -> None:
+    def __init__(self, neural_network, *, learning_rate: float = 0.1, update_bias: bool = True) -> None:
         self.__neural_network = neural_network
         self.__learning_rate = learning_rate
         self.__update_bias = update_bias

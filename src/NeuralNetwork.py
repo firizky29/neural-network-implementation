@@ -96,7 +96,7 @@ class NeuralNetwork:
             if(error <= self.error_threshold):
                 # print(f"i: {i}")
                 self.stopped_by = "error_threshold"
-                return
+                return self
         self.stopped_by = "max_iteration"   
 
         return self     
